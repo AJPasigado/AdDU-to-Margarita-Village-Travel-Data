@@ -10,6 +10,8 @@ import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -32,6 +34,9 @@ public class Home extends AppCompatActivity {
     TextView tv_min;
     TextView tv_sec;
 
+    String weather_type;
+    String route;
+    String jeepType;
 
 
     @Override
@@ -64,12 +69,88 @@ public class Home extends AppCompatActivity {
             setStopwatch();
         }
 
-        weather_text.setText(prefs.getString("weatherText", "Sunny"));
+        weather_type = prefs.getString("weatherText", "Sunny");
+        weather_text.setText(weather_type);
         weather_temp.setText(prefs.getString("weatherValue", "0") + "°");
         weather_updated.setText(prefs.getString("lastUpdate", "Never"));
 
+        route = prefs.getString("route", "Sasa");
+        jeepType = prefs.getString("type", "Multicab");
+
+        RadioButton jeep = findViewById(R.id.radioButton_type_jeep);
+        jeep.setChecked(jeepType.equals("Jeep"));
+
+        RadioButton sasa = findViewById(R.id.radioButton_route_sasa);
+        sasa.setChecked(route.equals("Sasa"));
+
+        RadioButton don = findViewById(R.id.radioButton_route_pilar);
+        don.setChecked(route.equals("Doña Pilar"));
+
+        RadioButton sasavc = findViewById(R.id.radioButton_route_sasavc);
+        sasavc.setChecked(route.equals("Sasa via Cabaguio"));
+
+        RadioButton tib = findViewById(R.id.radioButton_route_tib);
+        tib.setChecked(route.equals("Tibungco - Roxas"));
+
         ScrollView scrollView = findViewById(R.id.scrollView);
         scrollView.smoothScrollTo(0,0);
+
+
+        final SharedPreferences.Editor editor = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE).edit();
+
+        RadioGroup rgs = findViewById(R.id.radioGroup_route);
+        rgs.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener()
+        {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId)
+            {
+                switch(checkedId)
+                {
+                    case R.id.radioButton_route_sasa:
+                        route = "Sasa";
+                        editor.putString("route", route);
+                        editor.apply();
+                        break;
+                    case R.id.radioButton_route_pilar:
+                        route = "Doña Pilar";
+                        editor.putString("route", route);
+                        editor.apply();
+                        break;
+                    case R.id.radioButton_route_sasavc:
+                        route = "Sasa via Cabaguio";
+                        editor.putString("route", route);
+                        editor.apply();
+                        break;
+                    case R.id.radioButton_route_tib:
+                        route = "Tibungco - Roxas";
+                        editor.putString("route", route);
+                        editor.apply();
+                        break;
+                }
+            }
+        });
+
+        RadioGroup rgt = findViewById(R.id.radioGroup_type);
+        rgt.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener()
+        {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId)
+            {
+                switch(checkedId)
+                {
+                    case R.id.radioButton_type_jeep:
+                        jeepType = "Jeep";
+                        editor.putString("type", jeepType);
+                        editor.apply();
+                        break;
+                    case R.id.radioButton_type_mult:
+                        jeepType = "Multicab";
+                        editor.putString("type", jeepType);
+                        editor.apply();
+                        break;
+                }
+            }
+        });
     }
 
     public void manualRefresh(View v){
@@ -86,10 +167,10 @@ public class Home extends AppCompatActivity {
     boolean pauseTimer = false;
     boolean timerIsRunning;
     Long start_time = 0l;
-    Long time_paused = 0l;
 
 
     public void startStopwatch(View v) {
+        resetTime();
         setStopwatch();
     }
 
@@ -100,64 +181,46 @@ public class Home extends AppCompatActivity {
         stopwatch.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (!pauseTimer) {
-                            tv_msec.setText(String.format("%02d", seconds % 100));
-                            tv_sec.setText(String.format("%02d", (seconds / 1000) % 60));
-                            tv_min.setText(String.format("%02d", ((seconds / 1000) / 60) % 60));
-                            tv_h.setText(String.format("%02d", (seconds / 1000) / 3600));
-                            seconds++;
-                        }
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                if (!pauseTimer) {
+                    tv_msec.setText(String.format("%02d", (seconds % 1000) / 10));
+                    tv_sec.setText(String.format("%02d", (seconds / 1000) % 60));
+                    tv_min.setText(String.format("%02d", ((seconds / 1000) / 60) % 60));
+                    tv_h.setText(String.format("%02d", (seconds / 1000) / 3600));
+                    seconds++;
+                }
 
-                    }
-                });
+                }
+            });
             }
         }, 0, 1);
 
-        if (pauseTimer){
-            tv_msec.setText(String.format("%02d", seconds % 100));
-            tv_sec.setText(String.format("%02d", (seconds / 1000) % 60));
-            tv_min.setText(String.format("%02d", ((seconds / 1000) / 60) % 60));
-            tv_h.setText(String.format("%02d", (seconds / 1000) / 3600));
-            Button pause = findViewById(R.id.button_pause);
-            pause.setText("Resume");
-        }
         findViewById(R.id.button_pause).setEnabled(true);
-        findViewById(R.id.button_reset).setEnabled(true);
         findViewById(R.id.button_starttimer).setEnabled(false);
         findViewById(R.id.button_finish).setEnabled(false);
     }
 
     public void pauseStopWatch(View v){
-        Button btn = findViewById(v.getId());
-        btn.setText(!pauseTimer ? "Resume": "Pause");
-        pauseTimer = !pauseTimer;
-        if (pauseTimer) time_paused = System.currentTimeMillis();
-        else {
-            start_time += (System.currentTimeMillis() - time_paused);
-            time_paused = 0l;
-        }
-        if (!pauseTimer)findViewById(R.id.button_finish).setEnabled(false);
-        else findViewById(R.id.button_finish).setEnabled(true);
+        pauseTimer = true;
+        timerIsRunning = false;
+        findViewById(R.id.button_pause).setEnabled(false);
+        findViewById(R.id.button_finish).setEnabled(true);
+        findViewById(R.id.button_starttimer).setEnabled(true);
     }
 
-    public void resetStopWatch(View v){
+    private void resetTime(){
         stopwatch.cancel();
         seconds = 0l;
         pauseTimer = false;
         timerIsRunning = false;
-        time_paused = 0l;
         findViewById(R.id.button_finish).setEnabled(false);
 
         Button pause = findViewById(R.id.button_pause);
         Button start = findViewById(R.id.button_starttimer);
-        Button reset = findViewById(R.id.button_reset);
 
-        pause.setText("Pause");
         pause.setEnabled(false);
-        reset.setEnabled(false);
         start.setEnabled(true);
 
         tv_h.setText("00");
@@ -169,7 +232,6 @@ public class Home extends AppCompatActivity {
     @Override
     protected void onStop() {
         SharedPreferences.Editor editor = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE).edit();
-        if (pauseTimer) start_time += (System.currentTimeMillis() - time_paused);
         editor.putBoolean("pasueTime", pauseTimer);
         editor.putLong("timeElapsed", start_time);
         editor.putBoolean("timerIsRunning", timerIsRunning);
@@ -180,8 +242,6 @@ public class Home extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-
-
     }
 
     private class FetchWeatherDetails extends AsyncTask<URL, Void, String> {
@@ -274,6 +334,6 @@ public class Home extends AppCompatActivity {
 
     public void finish(View v){
         FinishDialog finishDialog = new FinishDialog();
-        finishDialog.showDialog(this);
+        finishDialog.showDialog(this, start_time, seconds, route, jeepType, weather_type);
     }
 }

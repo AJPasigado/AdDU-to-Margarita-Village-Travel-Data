@@ -51,26 +51,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:background="@drawable/radiobtn_main"
+                    android:background="@drawable/radiobtn_right_red"
                     android:clickable="true"
                     android:enabled="false"
                     android:onClick="pauseStopWatch"
-                    android:text="Pause"
+                    android:text="Stop"
                     android:textAppearance="@android:style/TextAppearance.Material"
                     android:textColor="@color/colorPrimary" />
 
-                <Button
-                    android:id="@+id/button_reset"
-                    style="@style/Widget.AppCompat.Button.Borderless"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="@drawable/radiobtn_right"
-                    android:enabled="false"
-                    android:onClick="resetStopWatch"
-                    android:text="Reset"
-                    android:textAppearance="@android:style/TextAppearance.Material"
-                    android:textColor="@color/colorPrimary" />
             </LinearLayout>
 
             <LinearLayout
@@ -148,8 +136,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="30dp"
                 android:text="Time"
-                app:layout_constraintStart_toStartOf="@+id/radioGroup3"
-                app:layout_constraintTop_toBottomOf="@+id/radioGroup3" />
+                app:layout_constraintStart_toStartOf="@+id/radioGroup_type"
+                app:layout_constraintTop_toBottomOf="@+id/radioGroup_type" />
 
             <TextView
                 android:id="@+id/textView4"
@@ -224,8 +212,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="30dp"
                 android:text="Type"
-                app:layout_constraintStart_toStartOf="@+id/radioGroup"
-                app:layout_constraintTop_toBottomOf="@+id/radioGroup" />
+                app:layout_constraintStart_toStartOf="@+id/radioGroup_route"
+                app:layout_constraintTop_toBottomOf="@+id/radioGroup_route" />
 
             <TextView
                 android:id="@+id/weather_type"
@@ -237,7 +225,7 @@
                 app:layout_constraintStart_toStartOf="@+id/weather_date" />
 
             <RadioGroup
-                android:id="@+id/radioGroup"
+                android:id="@+id/radioGroup_route"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
@@ -307,7 +295,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/textView6" />
 
             <RadioGroup
-                android:id="@+id/radioGroup3"
+                android:id="@+id/radioGroup_type"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
