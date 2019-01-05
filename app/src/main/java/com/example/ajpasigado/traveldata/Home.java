@@ -67,6 +67,14 @@ public class Home extends AppCompatActivity {
             start_time = prefs.getLong("timeElapsed", System.currentTimeMillis());
             timerIsRunning = true;
             setStopwatch();
+        } else {
+            seconds = prefs.getLong("seconds", 0);
+            start_time = prefs.getLong("timeElapsed", System.currentTimeMillis());
+
+            tv_msec.setText(String.format("%02d", (seconds % 1000) / 10));
+            tv_sec.setText(String.format("%02d", (seconds / 1000) % 60));
+            tv_min.setText(String.format("%02d", ((seconds / 1000) / 60) % 60));
+            tv_h.setText(String.format("%02d", (seconds / 1000) / 3600));
         }
 
         weather_type = prefs.getString("weatherText", "Sunny");
@@ -232,10 +240,13 @@ public class Home extends AppCompatActivity {
     @Override
     protected void onStop() {
         SharedPreferences.Editor editor = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE).edit();
+
+        editor.putBoolean("timerIsRunning", timerIsRunning);
         editor.putBoolean("pasueTime", pauseTimer);
         editor.putLong("timeElapsed", start_time);
-        editor.putBoolean("timerIsRunning", timerIsRunning);
+        editor.putLong("seconds", seconds);
         editor.apply();
+
         super.onStop();
     }
 
@@ -290,6 +301,7 @@ public class Home extends AppCompatActivity {
 
                     TextView weather_text = findViewById(R.id.weather_type);
                     String weatherText = resultsObj.getString("WeatherText");
+                    weather_type = weatherText;
                     editor.putString("weatherText", weatherText);
                     weather_text.setText(weatherText);
 

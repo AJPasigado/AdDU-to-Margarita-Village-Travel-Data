@@ -63,29 +63,38 @@
                 android:textColor="@color/colorPrimary"
                 android:textSize="12sp" />
 
-            <TextView
+            <EditText
                 android:id="@+id/tv_travelTime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignEnd="@+id/tv_departure"
                 android:layout_alignBottom="@+id/textView13"
                 android:layout_marginEnd="0dp"
-                android:layout_marginBottom="0dp"
-                android:text="90 min"
+                android:layout_marginBottom="-12dp"
+                android:backgroundTint="@color/colorAccent"
+                android:foregroundTint="@color/colorPrimary"
+                android:inputType="number"
+                android:singleLine="true"
+                android:text="90"
                 android:textColor="@color/colorPrimary"
+                android:textCursorDrawable="@null"
                 android:textSize="14sp"
                 android:textStyle="bold" />
 
-            <TextView
+            <EditText
                 android:id="@+id/tv_weather"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignEnd="@+id/tv_type"
                 android:layout_alignBottom="@+id/textView18"
                 android:layout_marginEnd="0dp"
-                android:layout_marginBottom="0dp"
+                android:layout_marginBottom="-12dp"
+                android:backgroundTint="@color/colorAccent"
+                android:foregroundTint="@color/colorPrimary"
+                android:singleLine="true"
                 android:text="Partly Cloudy"
                 android:textColor="@color/colorPrimary"
+                android:textCursorDrawable="@null"
                 android:textSize="14sp"
                 android:textStyle="bold" />
 
@@ -101,16 +110,21 @@
                 android:textColor="@color/colorPrimary"
                 android:textSize="12sp" />
 
-            <TextView
+            <EditText
                 android:id="@+id/tv_departure"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignEnd="@+id/tv_dayOf"
                 android:layout_alignBottom="@+id/textView12"
                 android:layout_marginEnd="0dp"
-                android:layout_marginBottom="0dp"
+                android:layout_marginBottom="-12dp"
+                android:backgroundTint="@color/colorAccent"
+                android:foregroundTint="@color/colorPrimary"
+                android:inputType="time"
+                android:singleLine="true"
                 android:text="20:11"
                 android:textColor="@color/colorPrimary"
+                android:textCursorDrawable="@null"
                 android:textSize="14sp"
                 android:textStyle="bold" />
 
@@ -154,42 +168,54 @@
                 android:textColor="@color/colorPrimary"
                 android:textSize="10sp" />
 
-            <TextView
+            <EditText
                 android:id="@+id/tv_route"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignEnd="@+id/tv_travelTime"
                 android:layout_alignBottom="@+id/textView14"
                 android:layout_marginEnd="0dp"
-                android:layout_marginBottom="0dp"
+                android:layout_marginBottom="-12dp"
+                android:backgroundTint="@color/colorAccent"
+                android:foregroundTint="@color/colorPrimary"
+                android:singleLine="true"
                 android:text="Sasa"
                 android:textColor="@color/colorPrimary"
+                android:textCursorDrawable="@null"
                 android:textSize="14sp"
                 android:textStyle="bold" />
 
-            <TextView
+            <EditText
                 android:id="@+id/tv_dayOf"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignEnd="@+id/textView26"
                 android:layout_alignBottom="@+id/textView11"
                 android:layout_marginEnd="0dp"
-                android:layout_marginBottom="0dp"
+                android:layout_marginBottom="-12dp"
+                android:backgroundTint="@color/colorAccent"
+                android:foregroundTint="@color/colorPrimary"
                 android:text="Tuesday"
                 android:textColor="@color/colorPrimary"
+                android:textCursorDrawable="@null"
                 android:textSize="14sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:singleLine="true" />
 
-            <TextView
+            <EditText
                 android:id="@+id/tv_type"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignEnd="@+id/tv_route"
                 android:layout_alignBottom="@+id/textView16"
                 android:layout_marginEnd="0dp"
-                android:layout_marginBottom="0dp"
+                android:layout_marginBottom="-12dp"
+                android:backgroundTint="@color/colorAccent"
+                android:foregroundTint="@color/colorPrimary"
+                android:singleLine="true"
                 android:text="Jeep"
                 android:textColor="@color/colorPrimary"
+                android:textCursorDrawable="@null"
                 android:textSize="14sp"
                 android:textStyle="bold" />
 
