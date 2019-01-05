@@ -77,6 +77,7 @@
                 android:singleLine="true"
                 android:text="90"
                 android:textColor="@color/colorPrimary"
+                android:textColorLink="@color/colorPrimary"
                 android:textCursorDrawable="@null"
                 android:textSize="14sp"
                 android:textStyle="bold" />
@@ -94,6 +95,7 @@
                 android:singleLine="true"
                 android:text="Partly Cloudy"
                 android:textColor="@color/colorPrimary"
+                android:textColorLink="@color/colorPrimary"
                 android:textCursorDrawable="@null"
                 android:textSize="14sp"
                 android:textStyle="bold" />
@@ -124,6 +126,7 @@
                 android:singleLine="true"
                 android:text="20:11"
                 android:textColor="@color/colorPrimary"
+                android:textColorLink="@color/colorPrimary"
                 android:textCursorDrawable="@null"
                 android:textSize="14sp"
                 android:textStyle="bold" />
@@ -181,6 +184,7 @@
                 android:singleLine="true"
                 android:text="Sasa"
                 android:textColor="@color/colorPrimary"
+                android:textColorLink="@color/colorPrimary"
                 android:textCursorDrawable="@null"
                 android:textSize="14sp"
                 android:textStyle="bold" />
@@ -195,12 +199,13 @@
                 android:layout_marginBottom="-12dp"
                 android:backgroundTint="@color/colorAccent"
                 android:foregroundTint="@color/colorPrimary"
+                android:singleLine="true"
                 android:text="Tuesday"
                 android:textColor="@color/colorPrimary"
                 android:textCursorDrawable="@null"
                 android:textSize="14sp"
                 android:textStyle="bold"
-                android:singleLine="true" />
+                android:textColorLink="@color/colorPrimary" />
 
             <EditText
                 android:id="@+id/tv_type"
@@ -215,6 +220,7 @@
                 android:singleLine="true"
                 android:text="Jeep"
                 android:textColor="@color/colorPrimary"
+                android:textColorLink="@color/colorPrimary"
                 android:textCursorDrawable="@null"
                 android:textSize="14sp"
                 android:textStyle="bold" />

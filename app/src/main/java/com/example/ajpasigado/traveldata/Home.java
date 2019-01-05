@@ -10,19 +10,38 @@ import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.ScrollView;
+import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.RetryPolicy;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.net.URL;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -38,6 +57,8 @@ public class Home extends AppCompatActivity {
     String route;
     String jeepType;
 
+    ListView listView;
+    ListAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +71,8 @@ public class Home extends AppCompatActivity {
         tv_h = findViewById(R.id.tv_h);
         tv_min = findViewById(R.id.tv_min);
         tv_sec = findViewById(R.id.tv_sec);
+
+        listView = findViewById(R.id.listView_history);
 
         TextView datetv = findViewById(R.id.weather_date);
         Date date = new Date();
@@ -103,6 +126,16 @@ public class Home extends AppCompatActivity {
         ScrollView scrollView = findViewById(R.id.scrollView);
         scrollView.smoothScrollTo(0,0);
 
+        ArrayList<HashMap<String, String>> list = new ArrayList<>();
+        Gson gson = new Gson();
+        Type type = new TypeToken<ArrayList<HashMap<String, String>>>() {
+        }.getType();
+        list = gson.fromJson(prefs.getString("list", list.toString()), type);
+
+        adapter = new SimpleAdapter(this, list, R.layout.listview_row,
+                new String[]{"dayOfWeek", "month", "minutes", "route"}, new int[]{R.id.lv_tv_day, R.id.lv_tv_month, R.id.lv_tv_time, R.id.lv_tv_route});
+
+        listView.setAdapter(adapter);
 
         final SharedPreferences.Editor editor = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE).edit();
 
@@ -344,8 +377,90 @@ public class Home extends AppCompatActivity {
         }
     }
 
+    private void getItems() {
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, "https://script.google.com/macros/s/AKfycbwNkRkA212jx6RyVe1hfSBwDXhQvw2DWI7U6Cmazoz_EsXFYiM/exec?action=getItems",
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        parseItems(response);
+                    }
+                },
+
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+
+                    }
+                }
+        );
+
+        int socketTimeOut = 30000;
+        RetryPolicy policy = new DefaultRetryPolicy(socketTimeOut, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
+
+        stringRequest.setRetryPolicy(policy);
+
+        RequestQueue queue = Volley.newRequestQueue(this);
+        queue.add(stringRequest);
+
+    }
+
+
+    private void parseItems(String jsonResposnce) {
+        ArrayList<HashMap<String, String>> list = new ArrayList<>();
+
+        try {
+            JSONObject jobj = new JSONObject(jsonResposnce);
+            JSONArray jarray = jobj.getJSONArray("items");
+
+            Log.i("Here", jarray.toString());
+            for (int i = 0; i < jarray.length(); i++) {
+                JSONObject jo = jarray.getJSONObject(i);
+
+                HashMap<String, String> item = new HashMap<>();
+                item.put("month", jo.getString("month"));
+                item.put("timeOfDeparture", jo.getString("timeOfDeparture"));
+                item.put("minutes", jo.getString("minutes"));
+                item.put("dayOfWeek", jo.getString("dayOfWeek"));
+                item.put("route", jo.getString("route"));
+                item.put("weather", jo.getString("weather"));
+                item.put("jeepType", jo.getString("jeepType"));
+
+                list.add(item);
+
+
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+        SharedPreferences.Editor editor = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE).edit();
+        try {
+            Gson gson = new Gson();
+            editor.putString("list", gson.toJson(list));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        editor.apply();
+
+        adapter = new SimpleAdapter(this,list,R.layout.listview_row,
+                new String[]{"dayOfWeek","month","minutes", "route"},new int[]{R.id.lv_tv_day,R.id.lv_tv_month,R.id.lv_tv_time,R.id.lv_tv_route});
+
+        listView.setAdapter(adapter);
+
+       findViewById(R.id.button_refresh_history).setVisibility(View.VISIBLE);
+       findViewById(R.id.progressBar_history).setVisibility(View.INVISIBLE);
+    }
+
     public void finish(View v){
         FinishDialog finishDialog = new FinishDialog();
         finishDialog.showDialog(this, start_time, seconds, route, jeepType, weather_type);
+    }
+
+    public void refreshHistory(View v){
+        findViewById(R.id.button_refresh_history).setVisibility(View.INVISIBLE);
+        findViewById(R.id.progressBar_history).setVisibility(View.VISIBLE);
+
+        getItems();
     }
 }
